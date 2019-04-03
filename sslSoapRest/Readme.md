@@ -7,7 +7,7 @@ GENERAL
    the keystore. Use Portecle or execute following command (if keystore.jks does not exist it will be
    created):
 
-     keytool -importkeystore -deststorepass <KeyStorePassword> -destkeypass <KeyStorePassword> -destkeystore keystore.jks -srckeystore <PFX file> -srcstoretype PKCS12 -alias 1 -destalias Au10tixBosClient
+     keytool -importkeystore -deststorepass <KeyStorePassword> -destkeypass <KeyStorePassword> -destkeystore keystore.jks -srckeystore <PFX file> -srcstoretype PKCS12 -alias 1 -destalias ThirdPartyClient
 
 3. Provided trustsstore cacerts.jks contains needed root CA (self-signed on AU10TIX trial servers) certificate.
    The password of the cacerts.jks is changeit.
