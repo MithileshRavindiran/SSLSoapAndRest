@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 /**
  * Created by elisaveta on 20.2.18.
@@ -104,5 +105,25 @@ public class RestTemplateConfig {
             keyStore.load(in, password);
         }
         return keyStore;
+    }
+
+    public RestTemplate au10tixrestTemplate() throws IOException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+        TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+        SSLContext sslContext = SSLContextBuilder
+                .create()
+                .loadKeyMaterial(ResourceUtils.getFile(keyStoreLocation),
+                        keyStorePassword.toCharArray(), keyStorePassword.toCharArray())
+                .loadTrustMaterial(ResourceUtils.getFile(trustStoreLocation), trustStorePassword.toCharArray())
+                //.loadTrustMaterial(null, acceptingTrustStrategy)
+                .build();
+        HttpClient client = HttpClients.custom()
+                .setSSLContext(sslContext)
+                .build();
+        HttpComponentsClientHttpRequestFactory requestFactory =
+                new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setHttpClient(client);
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        restTemplate.getMessageConverters().add(0, mappingJacksonHttpMessageConverter());
+        return restTemplate;
     }
 }
